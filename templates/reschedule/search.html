@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Search Appts{% endblock %}
+{% block content %}
+    {% include '_topbar.html' %}
+    <div id='rescheduling-section'>
+        <ul id='search-results'>
+        </ul>
+    </div>
+        <input type='text' id='search-appt' placeholder='search title of appoinment'>
+        <button id='search-appt-btn'>search</button>
+{% endblock %}
