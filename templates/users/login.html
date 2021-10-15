@@ -1,8 +1,30 @@
 {% extends 'base.html' %}
 {% block title %}login{% endblock %}
 {% block content %}
-    <form action='/users/login' method='POST'>
-        {% include '_forms.html' %}
-        <button>login</button>
-    </form>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-xl-5 border shadow rounded p-4 mx-3 mx-md-0">
+            <h1 class="display-1 justify-content-center mb-5">Login</h1>
+            <form action='/users/login' method='POST'>
+                {{ form.hidden_tag() }}
+                {% for field in form if field.widget.input_type != 'hidden' %}
+                    <div class="form-group">
+                            <p>
+                                {{field.label}}
+                                {{field(class='form-control')}}
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        {{error}}
+                                    {% endfor %}
+                                {% endif %}
+                            </p>
+                    </div>
+                {% endfor %}
+                <button class='btn btn-success btn-block btn-lg'>login</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

@@ -5,11 +5,10 @@ const scheduleSelectionBtn = document.querySelector('#select-schedule')
 const searchApptBtn = document.querySelector('#search-appt-btn')
 const searchResultsUl = document.querySelector('#search-results')
 
+
+//  Rescheduling Functions
 async function handleApptSearch() {
-    console.log('accessing handleApptSearch')
     const apptSearchQuery = document.querySelector('#search-appt').value
-    console.log(apptSearchQuery)
-    
     const res = await axios.get(`${BASE_URL}/reschedule/search`, {params: {q: apptSearchQuery}})
 
     for (let appt of res.data.appts) {
@@ -36,6 +35,21 @@ function generateApptResultsHTML(appt) {
     `
 }
 
+
+// Scheduling Functions
+
+async function handleClientSearch() {
+    const clientSearchQuery = document.querySelector('#search-client').value
+    const res = await axios.get(`${BASE_URL}/reschedule/search`, {params: {q: clientSearchQuery}})
+
+    for (let appt of res.data.appts) {
+        let apptListing = document.createElement('li')
+        apptListing.innerHTML = generateApptResultsHTML(appt)
+        searchResultSection.append(apptListing)
+    }
+}
+
+
 function toggleElementDisplay(element) {
     if (element.style.display === 'none') {
         element.style.display = 'block'
@@ -43,6 +57,7 @@ function toggleElementDisplay(element) {
         element.style.display = 'none'
     }
 }
+
 
 
 searchApptBtn.addEventListener('click', handleApptSearch)

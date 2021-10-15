@@ -12,8 +12,10 @@ class Appointment(db.Model):
     __tablename__ = 'appointments'
 
     id = db.Column(db.Integer, primary_key=True)
-    start_time = db.Column(db.Text, nullable=False)
-    end_time = db.Column(db.Text, nullable=False)
+    start_date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
     title = db.Column(db.String(60), nullable=False)
     note = db.Column(db.Text)
     staff_id = db.Column(db.Integer)
@@ -21,6 +23,7 @@ class Appointment(db.Model):
     type_id = db.Column(db.Integer)
     teamup_id = db.Column(db.Integer)
 
+    # categories = db.relationship("Category", secondary='Apppointment_Category')
 
 class Staff(db.Model):
     __tablename__ = 'staff'
@@ -75,7 +78,7 @@ class Category(db.Model):
     teamup_id = db.Column(db.Integer)
 
 
-class Apppointment_Catergory(db.Model):
+class Apppointment_Category(db.Model):
     __tablename__='appointments_categories'
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Reschedule{% endblock %}
+{% block content %}
+    {% include '_topbar.html' %}
+    <div id='rescheduling-section'>
+        <form action='/reschedule/update' method='POST'>
+            {% include '_forms.html' %}
+            <button>Reschedule</button>
+        </form>
+    </div>
+    <!-- iframe of calendar here -->
+{% endblock %}

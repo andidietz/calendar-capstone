@@ -1,9 +1,10 @@
 {{ form.hidden_tag() }}
 
 {% for field in form if field.widget.input_type != 'hidden' %}
-    <div>
-        {{field.label}}
-        {{field}}
+    <div class='d-inline'>
+        
+        {{field.label(class='d-inline')}}
+        {{field(class='form-control d-inline')}}
 
         <p>
             {% if field.errors %}

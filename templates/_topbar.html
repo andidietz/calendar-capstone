@@ -1,8 +1,14 @@
-<a href='/users/logout'>logout</a>
-<h1>Calendar</h1>
-<form action='/schedule/add' class='schedule-route'>
-    <button>Schedule</button>
-</form>
-<form action='/reschudule/search' class='reschedule-route'>
-    <button>Reschedule</button>
-</form>
+<div class="container">
+    <ul class="nav justify-content-end my-3">
+        <li class="nav-item">
+          <a class="nav-link" href="/">home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/logout">logout</a>
+        </li>
+      </ul>
+    <div class="btn-group my-3" role="group" aria-label="Basic example">
+        <a class='schedule-route btn btn-primary' href='/schedule/add'>Schedule</a>
+        <a class='reschedule-route btn btn-secondary' href='/reschudule/search'>Reschedule</a>
+    </div>
+</div>

@@ -54,7 +54,7 @@ def login_user():
 
 
 @app.route('/users/register', methods=['GET', 'post'])
-def resgister_staff():
+def register_staff():
 
     if 'user' in session:
         return redirect('/schedule/add')
@@ -147,14 +147,6 @@ def show_and_handle_note_form(appt_id):
 def serve_search_page():
     return render_template('reschedule/search.html')
 
-# ERROR HERE: JS axios call to this route returns an 
-# 'AttributeError: 'str' object has no attribute 'strftime'
-
-# Probably because the database Column is a text field rather than a datatime.
-# However, I can not figure out how to format the data for the Database to accept POSTed data
-# if it were a datatime column instead of text. 
-# Might be best if I figured out the formatting error going into the db instead of 
-# formatting it after querying it
 @app.route('/<int:appt_id>/reschedule', methods=['GET','POST'])
 def reschedule(appt_id):
 
@@ -167,7 +159,7 @@ def reschedule(appt_id):
     if form.validate_on_submit():
         appt = update_or_create_appt_in_db(form)
         update_appt_with_teamup_api(appt)
-
+        
         flash('Appt Saved')
         return redirect('/calendar')
     return render_template('reschedule/update.html', form=form, appt=appt)
@@ -178,10 +170,20 @@ def reschedule(appt_id):
 
 #  ERROR HERE: JS axios call to this route returns a 500 internal server error
 @app.route('/api/reschedule/search', methods=['GET'])
-def query_appt_on_teamup():
+def query_appt_on_database():
 
-    search_query = request.args.get('q', '')
-    appts = Appointment.query.filter_by(Appointment.title.like(f'%{search_query}%')).all()
+    search_query = request.args['q']
+    appts = Appointment.query.filter(Appointment.title.like(f'%{search_query}%')).all()
 
+    serialized = [serialize_search_results(appt) for appt in appts]
+    return jsonify(appts=serialized)
+
+@app.route('/api/schedule/search', methods=['GET'])
+def query_appt_on_hubspot():
+
+    search_query = request.args['q']
+
+    # TODO: Query Hubspot for clients
+    
     serialized = [serialize_search_results(appt) for appt in appts]
     return jsonify(appts=serialized)
