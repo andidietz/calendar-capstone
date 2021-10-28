@@ -68,21 +68,17 @@
           </div>
   </div>
   <div class="row">
-      <div class="col ">
-        <fieldset class="form-field form-group">
-          {% for categories in form.categories %}
-              <div class="form-check">
-                  {{ categories(class="form-check-input") }}
-                  {{ categories.label(class="form-check-label") }}
-              </div>
-          {% endfor %}
-              {% if form.categories.errors %}
-              <ul class="errors">
-              {% for error in form.categories.errors %}
-                  <li>{{ error }}</li>
+      <div class="col">
+        <fieldset class="form-field form-check">
+          {{ form.category.label }}
+          {{ form.category(class='form-control') }}
+          {% if form.category.errors %}
+          <ul class="errors">
+              {% for error in form.category.errors %}
+              <li>{{ error }}</li>
               {% endfor %}
-              </ul>
-              {% endif %}
+          </ul>
+          {% endif %}
         </fieldset>
       </div>
       <div class="col">

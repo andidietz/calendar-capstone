@@ -22,8 +22,7 @@ class Appointment(db.Model):
     client_id = db.Column(db.Integer)
     type_id = db.Column(db.Integer)
     teamup_id = db.Column(db.Integer)
-
-    # categories = db.relationship("Category", secondary='Apppointment_Category')
+    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
 
 class Staff(db.Model):
     __tablename__ = 'staff'
@@ -43,7 +42,6 @@ class Staff(db.Model):
     @classmethod
     def authenticate(cls, email, pwd):
         staff_member = cls.query.filter_by(email=email).first()
-        print('autho')
         if staff_member and bcrypt.check_password_hash(staff_member.password, pwd):
             return staff_member
         else:
@@ -74,13 +72,7 @@ class Category(db.Model):
     __tablename__ = 'categories'
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    category = db.Column(db.Text, nullable=False)
+    category = db.Column(db.Text)
     teamup_id = db.Column(db.Integer)
 
-
-class Apppointment_Category(db.Model):
-    __tablename__='appointments_categories'
-
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    appt_id = db.Column(db.Integer, nullable=False)
-    category_id = db.Column(db.Integer, nullable=False)
+    appointments = db.relationship('Appointment', backref='category', cascade="all, delete-orphan")

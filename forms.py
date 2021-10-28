@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, TextAreaField, widgets
+from wtforms import StringField, SelectField, PasswordField, SelectMultipleField, SelectField, TextAreaField, widgets
 from wtforms.fields.html5 import TimeField, DateField
 
 class LoginForm(FlaskForm):
@@ -21,7 +21,7 @@ class ScheduleForm(FlaskForm):
     start_time = TimeField('Start Time')
     end_date = DateField('End Date', format='%Y-%m-%d')
     end_time = TimeField('End Time')
-    categories = MultiCheckboxField('category', coerce=int)
+    category = SelectField('category', choices=[(1, 'second appt'), (2, 'annual review'), (3, 'requested appt or policy delivery'), (4, 'workshop'), (5, 'cancelled')], coerce=int)
     appt_type = SelectField('appt type', choices=[(1, 'in person'), (2, 'phone'), (3, 'zoom')], coerce=int)
     note = TextAreaField('note')
 

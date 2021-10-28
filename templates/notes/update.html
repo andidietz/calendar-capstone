@@ -1,15 +1,23 @@
 {% extends 'base.html' %}
 {% block title %}notes{% endblock %}
 {% block content %}
-    {% include '_topbar.html' %}
-    <h1>Save Successful</h1>
+	{% include '_topbar.html' %}
+	<div class="container">
+		<div class="row justify-content-center mb-2">
+			<h1>Save Successful</h1>
+		</div>
+		<div class="row justify-content-center mb-2"></div>
+			<div id='scheduling-section'>
+				<h5>Title: {{appt.title}}</h5>
+				
+				<form action='/notes/{{appt.id}}/update' method='POST'>
+						{% include '_notesform.html' %}
+						<div class="row justify-content-center mb-2">
+							<button class="btn btn-success" id='search-appt-btn'>Update</button>
+						</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
-    <div id='scheduling-section'>
-        <p>Title: {{appt.title}}</p>
-        <form action='/notes/{{appt.id}}/update'>
-            {% include '_forms.html' %}
-            <button>Schedule</button>
-        </form>
-    </div>
-    <iframe src='https://teamup.com/ks8u7pdfs1tisffnt1?showHeader=0&showLogo=0&showSearch=0&showProfileAndInfo=0&showSidepanel=0&showTitle=0&showViewSelector=1&showMenu=1&showAgendaHeader=1&showAgendaDetails=0&showYearViewHeader=1' style='width: 100%; height: 700px; border: 1px solid #cccccc' frameborder='0' >
 {% endblock %}

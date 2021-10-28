@@ -2,11 +2,18 @@
 {% block title %}Reschedule{% endblock %}
 {% block content %}
     {% include '_topbar.html' %}
-    <div id='rescheduling-section'>
-        <form action='/reschedule/update' method='POST'>
-            {% include '_forms.html' %}
-            <button>Reschedule</button>
-        </form>
+    <div class="container-fluid">
+			<div id='rescheduling-section'>
+				<form action='/reschedule/{{appt.id}}/update' method='POST'>
+					{% include '_scheduleform.html' %}
+					<div class="row justify-content-center mb-2">
+						<button class="btn btn-success">Reschedule</button>
+					</div>
+				</form>
+				<div class="row justify-content-center">
+					<!-- iframe of calendar here -->
+				</div>
+			</div>
     </div>
-    <!-- iframe of calendar here -->
+
 {% endblock %}

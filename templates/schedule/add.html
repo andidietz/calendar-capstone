@@ -1,12 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}Schedule{% endblock %}
 {% block content %}
-    <div class="container border">
-        <div class="row align-items-center text-center">
-                {% include '_topbar.html' %}
-        </div>
-    </div>
-
+  {% include '_topbar.html' %}
+  
   <div class="container-fluid">
 
       <form action="/schedule/add" method='POST'>
