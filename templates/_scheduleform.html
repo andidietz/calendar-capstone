@@ -1,112 +1,105 @@
 {{ form.hidden_tag() }}
 
 <div class="row justify-content-center">
-          <div class="col">
-            <fieldset class="form-field form-group input-sm">
-              {{ form.title.label }}
-              {{ form.title(class='form-control') }}
-              {% if form.title.errors %}
-              <ul class="errors">
-                  {% for error in form.title.errors %}
-                  <li>{{ error }}</li>
-                  {% endfor %}
-              </ul>
-              {% endif %}
-            </fieldset>
-          </div>
-          <div class="col">
-            <fieldset class="form-field form-group">
-              {{ form.start_date.label }}
-              {{ form.start_date(class='form-control') }}
-              {% if form.start_date.errors %}
-              <ul class="errors">
-                  {% for error in form.start_date.errors %}
-                  <li>{{ error }}</li>
-                  {% endfor %}
-              </ul>
-              {% endif %}
-            </fieldset>
-          </div>
-          <div class="col">
-            <fieldset class="form-field form-group">
-              {{ form.start_time.label }}
-              {{ form.start_time(class='form-control') }}
-              {% if form.start_time.errors %}
-              <ul class="errors">
-                  {% for error in form.start_time.errors %}
-                  <li>{{ error }}</li>
-                  {% endfor %}
-              </ul>
-              {% endif %}
-            </fieldset>
-          </div>
-          <div class="col">
-            <fieldset class="form-field form-group">
-              {{ form.end_date.label }}
-              {{ form.end_date(class='form-control') }}
-              {% if form.end_date.errors %}
-              <ul class="errors">
-                  {% for error in form.end_date.errors %}
-                  <li>{{ error }}</li>
-                  {% endfor %}
-              </ul>
-              {% endif %}
-            </fieldset>
-          </div>
-          <div class="col">
-            <fieldset class="form-field form-group">
-              {{ form.end_time.label }}
-              {{ form.end_time(class='form-control') }}
-              {% if form.end_time.errors %}
-              <ul class="errors">
-                  {% for error in form.end_time.errors %}
-                  <li>{{ error }}</li>
-                  {% endfor %}
-              </ul>
-              {% endif %}
-            </fieldset>
-          </div>
-  </div>
-  <div class="row">
-      <div class="col">
-        <fieldset class="form-field form-check">
-          {{ form.category.label }}
-          {{ form.category(class='form-control') }}
-          {% if form.category.errors %}
-          <ul class="errors">
-              {% for error in form.category.errors %}
-              <li>{{ error }}</li>
-              {% endfor %}
-          </ul>
-          {% endif %}
+    <div class="col">
+        <fieldset class="form-field form-group input-sm">
+        {{ form.title.label }}
+        {{ form.title(class='form-control') }}
+       
+        {% if form.title.errors %}
+        <ul class="errors">
+            {% for error in form.title.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         </fieldset>
-      </div>
-      <div class="col">
-        <fieldset class="form-field form-check">
-          {{ form.appt_type.label }}
-          {{ form.appt_type(class='form-control') }}
-          {% if form.appt_type.errors %}
-          <ul class="errors">
-              {% for error in form.appt_type.errors %}
-              <li>{{ error }}</li>
-              {% endfor %}
-          </ul>
-          {% endif %}
-        </fieldset>
-      </div>
-
-      <div class="col">
+    </div>
+    <div class="col">
         <fieldset class="form-field form-group">
-          {{ form.note.label }}
-          {{ form.note(class='form-control') }}
-          {% if form.note.errors %}
-          <ul class="errors">
-              {% for error in form.note.errors %}
-              <li>{{ error }}</li>
-              {% endfor %}
-          </ul>
-          {% endif %}
+        {{ form.start_date.label }}
+        {{ form.start_date(class='form-control') }}
+       
+        {% if form.start_date.errors %}
+        <ul class="errors">
+            {% for error in form.start_date.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         </fieldset>
-      </div>
-  </div>
+    </div>
+    <div class="col">
+        <fieldset class="form-field form-group">
+        {{ form.start_time.label }}
+        {{ form.start_time(class='form-control') }}
+       
+        {% if form.start_time.errors %}
+        <ul class="errors">
+            {% for error in form.start_time.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        </fieldset>
+    </div>
+    <div class="col">
+        <fieldset class="form-field form-group">
+        {{ form.end_time.label }}
+        {{ form.end_time(class='form-control') }}
+       
+        {% if form.end_time.errors %}
+        <ul class="errors">
+            {% for error in form.end_time.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        </fieldset>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <fieldset class="form-field form-check">
+        {{ form.category_id.label }}
+        {{ form.category_id(class='form-control') }}
+        
+        {% if form.category_id.errors %}
+        <ul class="errors">
+            {% for error in form.category_id.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        </fieldset>
+    </div>
+    <div class="col">
+        <fieldset class="form-field form-check">
+        {{ form.type_id.label }}
+        {{ form.type_id(class='form-control') }}
+        
+        {% if form.type_id.errors %}
+        <ul class="errors">
+            {% for error in form.type_id.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        </fieldset>
+    </div>
+
+    <div class="col">
+        <fieldset class="form-field form-group">
+        {{ form.note.label }}
+        {{ form.note(class='form-control') }}
+        
+        {% if form.note.errors %}
+        <ul class="errors">
+            {% for error in form.note.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        </fieldset>
+    </div>
 </div>

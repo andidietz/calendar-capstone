@@ -31,13 +31,14 @@ class Staff(db.Model):
     full_name = db.Column(db.Text, nullable=False)
     password = db.Column(db.Text, nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
+    admin = db.Column(db.Boolean, default=False)
     
     @classmethod
-    def register(cls, full_name, email, pwd):
+    def register(cls, full_name, email, pwd, admin):
         hashed = bcrypt.generate_password_hash(pwd)
         hashed_utf8 = hashed.decode('utf8')
 
-        return cls(full_name=full_name, email=email, password=hashed_utf8)
+        return cls(full_name=full_name, email=email, password=hashed_utf8, admin=admin)
 
     @classmethod
     def authenticate(cls, email, pwd):

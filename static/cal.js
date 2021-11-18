@@ -1,30 +1,15 @@
+// Question: how change BASE_URL with alternative to hardcore URL value?
 const BASE_URL = 'http://localhost:5000'
-const searchResultsDiv = document.querySelector('#search-results')
 const rescheduleSelectionBtn = document.querySelector('#select-reschedule')
 const scheduleSelectionBtn = document.querySelector('#select-schedule')
 const searchApptBtn = document.querySelector('#search-appt-btn')
 const searchResultsUl = document.querySelector('#search-results')
+const deleteApptBtn = document.querySelector('#delete-appt-btn')
 
-//  Rescheduling Functions
-async function handleApptSearch() {
-    const apptSearchQuery = document.querySelector('#search-appt').value
-    const res = await axios.get(`${BASE_URL}/api/reschedule/search`, {params: {q: apptSearchQuery}})
-
-    for (let appt of res.data.appts) {
-        let apptListing = document.createElement('li')
-        apptListing.innerHTML = generateApptResultsHTML(appt)
-        searchResultsUl.append(apptListing)
-    }
-}
-
-async function handleApptSelection(target) {
-    console.log(target)
-    console.log(target.dataset.apptId)
-
-    if (target.tagName === 'LI') {
-        let apptId = target.dataset.apptId
-
-        const res = await axios.get(`${BASE_URL}/reschedule/${apptId}/update`)
+// Helper Functions
+function removeChild(parent) {
+    while (parent.firstChild) {
+        parent.firstChild.remove()
     }
 }
 
@@ -49,10 +34,17 @@ function generateApptResultsHTML(appt) {
 
     return `
         <li data-appt-id='${appt.id}'>
-            ${appt.title} / ${startDate.toDateString()}/ ${startTime12Hours}
-            <a href=${BASE_URL}/reschedule/${appt.id}/update>select</a>
+            <span><b><i>${appt.title}</i></b></span>  —  ${startDate.toDateString()} @ ${startTime12Hours}
+            <a href=${BASE_URL}/${appt.id}/update>select</a>
         </li>
     `
+}
+
+async function getAppointments() {
+    const apptSearchQuery = document.querySelector('#search-appt').value
+    const res = await axios.get(`${BASE_URL}/api/reschedule/search`, {params: {q: apptSearchQuery}})
+    
+    return res
 }
 
 // Scheduling Functions
@@ -68,13 +60,28 @@ async function handleClientSearch() {
     }
 }
 
-function toggleElementDisplay(element) {
-    if (element.style.display === 'none') {
-        element.style.display = 'block'
-    } else {
-        element.style.display = 'none'
+//  Rescheduling Functions
+async function handleApptSelection(target) {
+    if (target.tagName === 'LI') {
+        let apptId = target.dataset.apptId
+
+        const res = await axios.get(`${BASE_URL}/${apptId}/update`)
     }
 }
+
+async function handleApptSearch() {
+    removeChild(searchResultsUl)
+
+    const res = await getAppointments()
+    for (let appt of res.data.appts) {
+        
+        let apptListing = document.createElement('li')
+        apptListing.innerHTML = generateApptResultsHTML(appt)
+        searchResultsUl.append(apptListing)
+    }
+}
+
+// Event Listeners
 
 searchResultsUl.addEventListener('click', function(evt){
     handleApptSelection(evt.target)
