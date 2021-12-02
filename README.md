@@ -1,5 +1,3 @@
-# calendar-capstone
-API: https://apidocs.teamup.com/#teamup-api-overview
 # The Scheduler #
 
 The Scheduler is an office oriented appointment setting tool. This app helps to break down an information silo within the business to allow different information systems that previously had little to no integration options to be able to freely pass information between themselves. The Scheduler does this by being the main point of information collection so that the data can be stored and sent to various sites through their APIs. Staff can visually see their shared Teamup calendar as well as the appointment setting form on the same page, preventing the need to navigate to multiple windows and sites to create an appointment record. Currently the Scheduler connects to Teamup and will later include an integration with the Hubspot CRM (client relationship management) for appointment record keeping. 
