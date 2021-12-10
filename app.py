@@ -1,18 +1,18 @@
 from flask import Flask, render_template, request, flash, redirect, session
 from flask.json import jsonify
 from flask_debugtoolbar import DebugToolbarExtension
+import os
 
-from helper import delete_appt_in_db, delete_appt_on_teamup, create_appt_with_teamup_api, update_note_in_db, create_appt_in_db, update_appt_in_db, serialize_search_results, update_appt_with_teamup_api
+import helper
 from forms import ScheduleForm, LoginForm, RegisterForm, NotesForm
 from models import Category, db, connect_db, Staff, Appointment
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///calendar'
-
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-app.config['SECRET_KEY'] = "Here's a secret"
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'JesTer2')
 toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
@@ -53,9 +53,11 @@ def login_user():
         if staff:
             session['user'] = staff.full_name
             session['admin'] = staff.admin
+            flash('Log in successful', 'alert alert-success')
+
             return redirect('/')
         else:
-            flash('Invalid email or password. Please try again.')
+            flash('Invalid email or password. Please try again.', 'alert alert-danger')
     return render_template('users/login.html', form=form) 
 
 
@@ -72,18 +74,22 @@ def register_staff():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        full_name = form.full_name.data
-        email = form.email.data
-        password = form.password.data
-        admin = form.admin.data
+        try:
+            full_name = form.full_name.data
+            email = form.email.data
+            password = form.password.data
+            admin = form.admin.data
 
-        staff = Staff.register(full_name, email, password, admin)
-        db.session.add(staff)
-        db.session.commit()
+            staff = Staff.register(full_name, email, password, admin)
+            db.session.add(staff)
+            db.session.commit()
 
-        session['user'] = staff.full_name
-        
-        return redirect('/')
+            session['user'] = staff.full_name
+            
+            return redirect('/')
+        except:
+            flash('Username already in use', 'alert alert-danger')
+            redirect('/users/register')
     return render_template('users/register.html', form=form) 
 
 @app.route('/users/logout')
@@ -102,7 +108,7 @@ def show_and_handle_schedule_form():
     POST: create appt in db and sends POST request to Teamup API to create new calendar event.
     """
     if 'user' not in session:
-        flash('Must be logged in')
+        flash('Must be logged in', 'alert alert-danger')
         return redirect('/login')
 
     form = ScheduleForm()
@@ -110,11 +116,15 @@ def show_and_handle_schedule_form():
     form.category_id.choices = categories
 
     if form.validate_on_submit():
-        appt = create_appt_in_db(form)
-        create_appt_with_teamup_api(appt)
+        if helper.validate_endtime(form):
+            appt = helper.create_appt_in_db(form)
+            helper.create_appt_with_teamup_api(appt)
 
-        flash('Appt Saved')
-        return redirect(f'/notes/{appt.id}/update')
+            flash('Appt Saved', 'alert alert-success')
+            return redirect(f'/notes/{appt.id}/update')
+        else:
+            flash('Invalid Endtime', 'alert alert-danger')
+            redirect('/schedule/add')
     return render_template('schedule/add.html', form=form)
 
 
@@ -126,7 +136,7 @@ def serve_search_page():
     """ GET: serve search page to search appointments by title"""
 
     if 'user' not in session:
-        flash('Must be logged in')
+        flash('Must be logged in', 'alert alert-danger')
         return redirect('/users/login')
     return render_template('reschedule/search.html')
 
@@ -138,7 +148,7 @@ def reschedule(appt_id):
     POST: update appointment in db and on Teamup through Teamup API.
     """
     if 'user' not in session:
-        flash('Must be logged in')
+        flash('Must be logged in', 'alert alert-danger')
         return redirect('/users/login')
 
     appt = Appointment.query.get_or_404(appt_id)
@@ -148,10 +158,10 @@ def reschedule(appt_id):
     form.category_id.choices = categories
 
     if form.validate_on_submit():
-        appt = update_appt_in_db(form, appt)
-        update_appt_with_teamup_api(appt)
+        appt = helper.update_appt_in_db(form, appt)
+        helper.update_appt_with_teamup_api(appt)
         
-        flash('Appt Saved')
+        flash('Appt Saved', 'alert alert-success')
         return redirect(f'/notes/{appt_id}/update')
     return render_template('reschedule/update.html', appt=appt, form=form)
 
@@ -167,15 +177,16 @@ def show_and_handle_note_form(appt_id):
     POST: update notes value in db and on Teamup through Teamup API.
     """
     if 'user' not in session:
-        flash('Must be logged in')
+        flash('Must be logged in', 'alert alert-danger')
         return redirect('/users/login')
  
     appt = Appointment.query.get_or_404(appt_id)
     form = NotesForm(obj=appt)
 
     if form.validate_on_submit():
-        update_note_in_db(form, appt)
-        update_appt_with_teamup_api(appt)
+        helper.update_note_in_db(form, appt)
+        helper.update_appt_with_teamup_api(appt)
+        flash('Appointment Updated', 'alert alert-success')
         return redirect('/')
     return render_template('notes/update.html', form=form, appt=appt)
 
@@ -187,14 +198,14 @@ def delete_appt(appt_id):
     If Not Admin, flash message and redirect to home.
     """
     if not 'admin':
-        flash('Appointment Cannot Be Deleted From Scheduler')
+        flash('Appointment Cannot Be Deleted From Scheduler', 'alert alert-danger')
         return redirect('/')
 
     appt = Appointment.query.get_or_404(appt_id)
-    delete_appt_in_db(appt)
-    delete_appt_on_teamup(appt)
+    helper.delete_appt_in_db(appt)
+    helper.delete_appt_on_teamup(appt)
 
-    flash('Appointment Successfully Deleted')
+    flash('Appointment Successfully Deleted', 'alert alert-success')
     return redirect('/')
 
 
@@ -206,7 +217,10 @@ def query_appt_on_database():
     """ Queries db to find appointment by id and returns jsonified appointments matching query string"""
 
     search_query = request.args['q']
-    appts = Appointment.query.filter(Appointment.title.like(f'%{search_query}%')).all()
-
-    serialized = [serialize_search_results(appt) for appt in appts]
-    return jsonify(appts=serialized)
+    appts = Appointment.query.filter(Appointment.title.ilike(f'%{search_query}%')).all()
+    serialized = [helper.serialize_search_results(appt) for appt in appts]
+    if not appts:
+        return jsonify({'msg':'not found'})
+    else:
+        serialized = [helper.serialize_search_results(appt) for appt in appts]
+        return jsonify(appts=serialized)

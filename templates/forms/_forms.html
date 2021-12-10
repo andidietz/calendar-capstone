@@ -1,0 +1,17 @@
+{{ form.hidden_tag() }}
+
+{% for field in form if field.widget.input_type != 'hidden' %}
+    <div class='d-inline'>
+        
+        {{field.label(class='d-inline')}}
+        {{field(class='form-control d-inline')}}
+
+        <p>
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    {{error}}
+                {% endfor %}
+            {% endif %}
+        </p>
+    </div>
+    {% endfor %}

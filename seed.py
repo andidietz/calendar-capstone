@@ -5,27 +5,27 @@ db.drop_all()
 db.create_all()
 
 c1 = Category(
-    teamup_id=9382928,
+    teamup_id=10285234,
     category='annual review'
 )
 
 c2 = Category(
-    teamup_id=9381286,
+    teamup_id=10285238,
     category='requested appt or policy delivery'
 )
 
 c3 = Category(
-    teamup_id=9387377,
+    teamup_id=10285233,
     category='second appt'
 )
 
 c4 = Category(
-    teamup_id=9381285,
+    teamup_id=10285239,
     category='workshop'
 )
 
 c5 = Category(
-    teamup_id=9387837,
+    teamup_id=10285235,
     category='cancelled'
 )
 

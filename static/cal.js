@@ -1,7 +1,4 @@
-// Question: how change BASE_URL with alternative to hardcore URL value?
-const BASE_URL = 'http://localhost:5000'
-const rescheduleSelectionBtn = document.querySelector('#select-reschedule')
-const scheduleSelectionBtn = document.querySelector('#select-schedule')
+const BASE_URL = 'https://calendar-capstone.herokuapp.com'
 const searchApptBtn = document.querySelector('#search-appt-btn')
 const searchResultsUl = document.querySelector('#search-results')
 const deleteApptBtn = document.querySelector('#delete-appt-btn')
@@ -53,10 +50,14 @@ async function handleClientSearch() {
     const clientSearchQuery = document.querySelector('#search-client').value
     const res = await axios.get(`${BASE_URL}/api/reschedule/search`, {params: {q: clientSearchQuery}})
 
-    for (let appt of res.data.appts) {
-        let apptListing = document.createElement('li')
-        apptListing.innerHTML = generateApptResultsHTML(appt)
-        searchResultSection.append(apptListing)
+    if (res.data === 'not found') {
+        flashApptNotFound()
+    } else {
+        for (let appt of res.data.appts) {
+            let apptListing = document.createElement('li')
+            apptListing.innerHTML = generateApptResultsHTML(appt)
+            searchResultSection.append(apptListing)
+        }
     }
 }
 
@@ -71,20 +72,28 @@ async function handleApptSelection(target) {
 
 async function handleApptSearch() {
     removeChild(searchResultsUl)
-
     const res = await getAppointments()
-    for (let appt of res.data.appts) {
+
+    if (res.data.msg === 'not found') {
+        flashApptNotFound()
+    } else {
+        for (let appt of res.data.appts) {
         
-        let apptListing = document.createElement('li')
-        apptListing.innerHTML = generateApptResultsHTML(appt)
-        searchResultsUl.append(apptListing)
+            let apptListing = document.createElement('li')
+            apptListing.innerHTML = generateApptResultsHTML(appt)
+            searchResultsUl.append(apptListing)
+        }
     }
 }
 
-// Event Listeners
+function flashApptNotFound() {
+    let msg = document.createElement('p')
+    msg.innerText = 'No Matching Appointments Found'
+    searchResultsUl.append(msg)
+}
 
+// Event Listeners
 searchResultsUl.addEventListener('click', function(evt){
     handleApptSelection(evt.target)
     })
 searchApptBtn.addEventListener('click', handleApptSearch)
-rescheduleSelectionBtn.addEventListener('click', handleRescheduleSelection)

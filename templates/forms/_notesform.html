@@ -1,0 +1,18 @@
+{{ form.hidden_tag() }}
+
+<div class='row justify-content-center'>
+    <div class='col'>
+        <fieldset class='form-field form-group'>
+        {{ form.note.label }}
+        {{ form.note(class='form-control') }}
+        
+        {% if form.note.errors %}
+        <ul class='errors'>
+            {% for error in form.note.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        </fieldset>
+    </div>
+</div>

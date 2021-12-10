@@ -24,6 +24,7 @@ class Appointment(db.Model):
     teamup_id = db.Column(db.Integer)
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
 
+
 class Staff(db.Model):
     __tablename__ = 'staff'
 

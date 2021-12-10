@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Notes{% endblock %}
+{% block content %}
+	{% include '_topbar.html' %}
+
+	<div class='container'>
+		<div class='row justify-content-center mb-2'>
+			<h1>Save Successful</h1>
+		</div>
+		<div class='row justify-content-center mb-2'></div>
+			<div id='scheduling-section'>
+				<h5>Title: {{appt.title}}</h5>
+				
+				<form action='/notes/{{appt.id}}/update' method='POST'>
+          {% include 'forms/_notesform.html' %}
+          <div class='row justify-content-center mb-2'>
+            <button class='btn btn-success' id='search-appt-btn'>Save</button>
+          </div>
+				</form>
+				<div class='alert alert-warning text-center' role='alert'>
+					<span class='font-weight-bold'>Remember:</span> add and update appointments using the above form only.          
+				</div>
+				<div class='row justify-content-center'>
+					<iframe src='https://teamup.com/ksg6y63kvw95btxqo9?showLogo=0&showSearch=0&showProfileAndInfo=0&showSidepanel=0&disableSidepanel=0&showTitle=0&showViewSelector=1&showMenu=1&showAgendaHeader=1&showAgendaDetails=0&showYearViewHeader=1' style='width: 100%; height: 500px' frameborder='0' />
+				</div>
+			</div>
+		</div>
+	</div>
+    
+{% endblock %}

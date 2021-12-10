@@ -1,12 +1,13 @@
 from flask import session, jsonify
 from models import Category, db, Staff, Appointment
-from secret_keys import TEAMUP_API_KEY
 import requests 
 import json
+import os
 
-api_key = TEAMUP_API_KEY
+api_key = os.environ.get('TEAMUP_API_KEY')
+calendar_id = os.environ.get('CALENDAR_ID')
 TEAMUP_BASE_URL = 'https://api.teamup.com'
-calendar_id = 'ksov3s6kgmpk6chjah'
+
 
 TEAMUP_GET_HEADERS = {
    'Teamup-Token': api_key,
@@ -49,6 +50,12 @@ def serialize_search_results(appt):
         "note": appt.note,
         "teamup_id": appt.teamup_id
     }
+
+def validate_endtime(form):
+    """Return None if appt's end time is before its start time"""
+    if form.end_time.data < form.start_time.data:
+        return None
+    return 'Valid datetime'
 
 #############################################
 # Database
@@ -99,7 +106,8 @@ def update_appt_in_db(form, appt):
     return appt
 
 def delete_appt_in_db(appt):
-        
+    """Delete appointment in database"""
+
     db.session.delete(appt)
     db.session.commit()
     return appt
@@ -111,8 +119,8 @@ def delete_appt_in_db(appt):
 def create_appt_with_teamup_api(appt):
     """Send POST request to Teamup API to create event on calendar"""
 
-    start_dt = f'{appt.start_date}T{appt.start_time}-05:00'
-    end_dt = f'{appt.start_date}T{appt.end_time}-05:00'
+    start_dt = f'{appt.start_date}T{appt.start_time}-06:00'
+    end_dt = f'{appt.start_date}T{appt.end_time}-06:00'
     category = Category.query.get_or_404(appt.category_id)
 
     data = {
@@ -152,8 +160,8 @@ def update_appt_with_teamup_api(appt):
     version_num = get_resp_data[version_start:version_end]
 
     id = str(appt.teamup_id)
-    start_dt = f'{appt.start_date}T{appt.start_time}-05:00'
-    end_dt = f'{appt.start_date}T{appt.end_time}-05:00'
+    start_dt = f'{appt.start_date}T{appt.start_time}-06:00'
+    end_dt = f'{appt.start_date}T{appt.end_time}-06:00'
 
     data = {
             "id": id,
